@@ -1,12 +1,230 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ntsksj</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>頻りに寄せる波</title>
+<meta name="description" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d1b2a;        /* deep navy ink */
+  --paper:#f3efe6;      /* chart paper */
+  --paper-2:#e8e2d4;
+  --flag-red:#c8102e;   /* signal red */
+  --flag-blue:#005a9c;  /* signal blue */
+  --flag-yellow:#f2b705;/* signal yellow */
+  --line:#c2b8a3;
+  --muted:#5c6470;
+  --display:'Space Grotesk',system-ui,sans-serif;
+  --jp:'Noto Sans JP',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--jp);
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+
+/* ---- signal flag strip (signature) ---- */
+.hoist{display:flex;height:8px;width:100%}
+.hoist span{flex:1}
+.hoist .r{background:var(--flag-red)}
+.hoist .b{background:var(--flag-blue)}
+.hoist .y{background:var(--flag-yellow)}
+.hoist .w{background:var(--paper-2)}
+.hoist .k{background:var(--ink)}
+
+/* ---- nav ---- */
+nav{position:sticky;top:0;z-index:50;background:rgba(243,239,230,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font-family:var(--display);font-weight:700;letter-spacing:.04em;font-size:1.05rem}
+.navlinks{display:flex;gap:26px;font-family:var(--mono);font-size:.82rem}
+.navlinks a{color:var(--muted);transition:color .2s}
+.navlinks a:hover{color:var(--flag-red)}
+@media(max-width:640px){.navlinks{display:none}}
+
+/* ---- hero ---- */
+.hero{padding:88px 0 64px;position:relative}
+.eyebrow{font-family:var(--mono);font-size:.8rem;color:var(--flag-blue);letter-spacing:.18em;text-transform:uppercase;margin-bottom:22px}
+.hero h1{
+  font-family:var(--display);
+  font-weight:700;
+  font-size:clamp(2.6rem,7vw,5.2rem);
+  line-height:1.02;
+  letter-spacing:-.02em;
+  margin-bottom:24px;
+}
+.hero h1 em{font-style:normal;color:var(--flag-blue)}
+.hero .lead{max-width:560px;font-size:1.08rem;color:#33404f}
+.hero-flags{display:flex;gap:6px;margin-top:38px;flex-wrap:wrap}
+.flag{width:44px;height:44px;flex-shrink:0;overflow:hidden}
+/* international code of signals — W A V E */
+/* W (Whiskey): blue field, white border, red centre square (nested) */
+.f-w{background:var(--flag-blue);position:relative}
+.f-w::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:26px;height:26px;background:#fff}
+.f-w::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:13px;height:13px;background:var(--flag-red)}
+/* A (Alfa): swallowtailed, white | blue vertical halves */
+.f-a{background:linear-gradient(90deg,#fff 0 50%,var(--flag-blue) 50% 100%);
+  clip-path:polygon(0 0, 100% 0, 75% 50%, 100% 100%, 0 100%)}
+/* V (Victor): white field, red saltire (X) */
+.f-v{background:#fff;position:relative}
+.f-v::before,.f-v::after{content:"";position:absolute;left:50%;top:50%;width:64px;height:8px;background:var(--flag-red)}
+.f-v::before{transform:translate(-50%,-50%) rotate(45deg)}
+.f-v::after{transform:translate(-50%,-50%) rotate(-45deg)}
+/* E (Echo): blue (top) / red (bottom) horizontal halves */
+.f-e{background:linear-gradient(180deg,var(--flag-blue) 0 50%,var(--flag-red) 50% 100%)}
+
+/* ---- section heading ---- */
+.sec{padding:64px 0;border-top:1px solid var(--line)}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:40px}
+.sec-num{font-family:var(--mono);font-size:.85rem;color:var(--flag-red)}
+.sec-head h2{font-family:var(--display);font-weight:500;font-size:1.9rem;letter-spacing:-.01em}
+
+/* ---- about ---- */
+.about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:48px}
+@media(max-width:760px){.about-grid{grid-template-columns:1fr;gap:32px}}
+.about p{margin-bottom:16px;color:#33404f}
+.profile{text-align:center}
+.profile img{width:140px;height:140px;border-radius:10%;object-fit:cover;border:1px solid var(--line);background:var(--paper-2)}
+.profile .name{font-family:var(--display);font-weight:500;font-size:1.2rem;margin-top:16px}
+
+/* ---- projects ---- */
+.proj{display:grid;grid-template-columns:60px 1fr;gap:24px;padding:30px 0;border-top:1px dashed var(--line)}
+.proj:first-of-type{border-top:none}
+@media(max-width:560px){.proj{grid-template-columns:1fr;gap:10px}}
+.proj-no{font-family:var(--mono);font-size:.95rem;color:var(--flag-red)}
+.proj h3{font-family:var(--display);font-weight:500;font-size:1.35rem;margin-bottom:8px}
+.proj .tags{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-bottom:12px;display:flex;flex-wrap:wrap;gap:6px}
+.proj .tags span{border:1px solid var(--line);padding:2px 8px;border-radius:2px}
+.proj p{color:#33404f;max-width:620px}
+.proj .links{margin-top:12px;font-family:var(--mono);font-size:.8rem}
+.proj .links a{color:var(--flag-blue);border-bottom:1px solid transparent;transition:border .2s}
+.proj .links a:hover{border-color:var(--flag-blue)}
+
+/* ---- contact ---- */
+.contact{text-align:center;padding:80px 0 40px}
+.contact h2{font-family:var(--display);font-weight:700;font-size:clamp(1.8rem,5vw,2.8rem);margin-bottom:18px}
+.contact .links{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;font-family:var(--mono);font-size:.9rem;margin-top:24px}
+.contact .links a{border-bottom:2px solid var(--flag-red);padding-bottom:2px}
+footer{padding:30px 0;text-align:center;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+:focus-visible{outline:2px solid var(--flag-blue);outline-offset:3px}
+</style>
 </head>
 <body>
-  <h1>ntsk</h1>
-  <p>日本在住。</p>
+
+<div class="hoist" aria-hidden="true">
+  <span class="r"></span><span class="w"></span><span class="b"></span><span class="y"></span><span class="k"></span>
+  <span class="b"></span><span class="r"></span><span class="w"></span><span class="y"></span><span class="k"></span>
+</div>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">頻りに寄せる波</div>
+    <div class="navlinks">
+      <a href="#about">About</a>
+      <a href="#work">Work</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Engineer · Japan</div>
+    <h1>一つの<em>波</em>が大海をつくる。</h1>
+    <p class="lead">iOSアプリ、サーバ基盤構築、市場データの分析自動化まで。設計からデプロイまで自分の手で形にするエンジニアです。</p>
+    <div class="hero-flags" role="img" aria-label="国際信号旗による綴り WAVE">
+      <div class="flag f-w"></div>
+      <div class="flag f-a"></div>
+      <div class="flag f-v"></div>
+      <div class="flag f-e"></div>
+    </div>
+  </div>
+</header>
+
+<section class="sec" id="about">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">01</span><h2>About</h2></div>
+    <div class="about-grid">
+      <div class="about reveal">
+        <p>ソフトウェアからネットワーク、組込み、金融データ解析まで、領域をまたいで「実際に動くシステム」を作ることに関心があります。</p>
+        <p>最近はSwift/SwiftUIによるiOSアプリ開発と、東証の市場データを扱うツール作りに取り組んでいます。</p>
+      </div>
+      <div class="profile reveal">
+        <img src="https://shikinami.jp/prof.png">
+        <div class="name">Taisuke Nakano</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="work">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">02</span><h2>Selected Work</h2></div>
+
+    <h3>coming soon ...</h3>
+    <!--
+    <article class="proj reveal">
+      <div class="proj-no">001</div>
+      <div>
+        <h3>Smart Morse</h3>
+        <div class="tags"><span>iOS App</span></div>
+        <p>信号旗をテーマにしたiOSアプリ。SwiftUIで設計し、コード署名・実機デプロイ・GitHubでのバージョン管理までを一貫して構築。</p>
+        <div class="links"><a href="#" rel="noopener">Read more →</a></div>
+      </div>
+    </article>
+    -->
+
+    <!-- # Template
+    <article class="proj reveal">
+      <div class="proj-no">000</div>
+      <div>
+        <h3>ProjectName</h3>
+        <div class="tags"><span>Python</span><span>Network</span><span>コミュニケーション</span></div>
+        <p>ProjectSummary〜〜〜〜〜</p>
+        <div class="links"><a href="#" rel="noopener">Read more →</a></div>
+      </div>
+    </article>
+    -->
+
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="links">
+      <a href="mailto:admin@shikinami.jp">admin@shikinami.jp</a>
+    </div>
+  </div>
+</section>
+
+<div class="hoist" aria-hidden="true">
+  <span class="k"></span><span class="y"></span><span class="w"></span><span class="r"></span><span class="b"></span>
+  <span class="k"></span><span class="y"></span><span class="b"></span><span class="w"></span><span class="r"></span>
+</div>
+
+<footer>© 2026 TAISUKE NAKANO</footer>
+
+<script>
+const io=new IntersectionObserver((es)=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
 </body>
 </html>
